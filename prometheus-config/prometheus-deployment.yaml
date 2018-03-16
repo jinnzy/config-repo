@@ -1,0 +1,71 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    k8s-app: prometheus
+  name: prometheus
+  namespace: kube-ops
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        k8s-app: prometheus
+    spec:
+      serviceAccountName: prometheus
+      securityContext:
+        runAsUser: 0
+      containers:
+      - image: prom/prometheus:v2.0.0
+        name: prometheus
+        command:
+        - "/bin/prometheus"
+        args:
+        - "--config.file=/etc/prometheus/prometheus.yml"
+        - "--storage.tsdb.path=/prometheus"
+        - "--storage.tsdb.retention=24h"
+        ports:
+        - containerPort: 9090
+          protocol: TCP
+          name: http
+        volumeMounts:
+        - mountPath: "/prometheus"
+          name: data
+        - mountPath: "/etc/prometheus"
+          name: config-volume
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 200m
+            memory: 1Gi
+      - image: quay.io/prometheus/alertmanager:v0.12.0
+        name: alertmanager
+        args:
+        - "-config.file=/etc/alertmanager/config.yml"
+        - "-storage.path=/alertmanager"
+        ports:
+        - containerPort: 9093
+          protocol: TCP
+          name: http
+        volumeMounts:
+        - name: alertmanager-config-volume
+          mountPath: /etc/alertmanager
+        resources:
+          requests:
+            cpu: 50m
+            memory: 50Mi
+          limits:
+            cpu: 200m
+            memory: 200Mi
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: prometheus-pvc
+      - configMap:
+          name: prometheus-config
+        name: config-volume
+      - name: alertmanager-config-volume
+        configMap:
+          name: alertmanager
