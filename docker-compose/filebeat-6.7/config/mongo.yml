@@ -1,0 +1,20 @@
+- type: log
+  paths:
+    - /var/log/audit.bson
+  close_inactive: 30m
+  close_removed: true
+  clean_removed: true
+  #multiline.pattern: '^{'
+  #multiline.negate: true
+  #multiline.match: after
+  json.keys_under_root: true # 默认这个值是FALSE的，也就是我们的json日志解析后会被放在json键上。设为TRUE，所有的keys就会被放到根节点。
+  json.overwrite_keys: true #是否要覆盖原有的key，这是关键配置，将keys_under_root设为TRUE后，再将overwrite_keys也设为TRUE，就能把filebeat默认的key值给覆盖了。
+  json.add_error_key: true
+  fields:
+    dbtype: mongo
+  fields_under_root: true
+#  processors:
+#    - drop_fields:
+#        fields: ["prospector", "offset","beat"]
+#  收集的时候直接解析
+

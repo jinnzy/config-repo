@@ -1,0 +1,18 @@
+version: '3.1'
+
+services:
+  zoo:
+    image: zookeeper:3.4
+    restart: always
+    hostname: zoo
+    ports:
+    - 2181:2181
+    volumes:
+    - ./data:/loki
+    - ./datalog:/datalog
+  #zoo1:
+  #  image: zookeeper:3.4
+  #  restart: always
+  #  hostname: zoo
+  #  ports:
+  #    - 2182:2181

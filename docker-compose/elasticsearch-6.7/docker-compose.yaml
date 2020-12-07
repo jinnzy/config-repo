@@ -1,0 +1,22 @@
+version: '3'
+services:
+  elasticsearch:
+    restart: always
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.7.1
+    container_name: elasticsearch
+    #environment:
+    #  - cluster.name=docker-cluster
+    #  - bootstrap.memory_lock=true
+    #  - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - /opt/es-data1:/usr/share/elasticsearch/data
+      - ./config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - ./config/jvm.options:/usr/share/elasticsearch/config/jvm.options
+    #ports:
+    #  - 9200:9200
+    #  - 9300:9300
+    network_mode: host

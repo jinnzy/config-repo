@@ -1,0 +1,35 @@
+version: '3'
+services:
+  openldap:
+    restart: always
+    image: osixia/openldap:1.2.4
+    container_name: openldap
+    #command: --loglevel debug
+    #user: root
+    volumes:
+      - /etc/localtime:/etc/localtime
+      #- ./config/ldap:/etc/ldap
+      - ./config/slapd.d:/etc/ldap/slapd.d
+      - ./data/ldap:/var/lib/ldap
+      - ./data/certs:/container/service/slapd/assets/certs
+    hostname: devops
+    environment:
+      LDAP_ORGANISATION: "devops"
+      LDAP_DOMAIN: "devops.com"
+      LDAP_ADMIN_PASSWORD: "123456"
+    ports:
+      - 389:389
+      - 636:636
+    network_mode: bridge
+#  ldapadmin:
+#    restart: always
+#    image: osixia/phpldapadmin:0.7.2
+#    container_name: ldapadmin
+#    user: root
+#    volumes:
+#      - /etc/localtime:/etc/localtime
+#      #- ./config/ldap:/etc/ldap
+#    environment:
+#      PHPLDAPADMIN_LDAP_HOSTS: "devops.com"
+#    ports:
+#      - 6443:443

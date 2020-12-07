@@ -1,0 +1,12 @@
+version: '3.3'
+      
+services:
+  cerebro:
+    #image: 'jenkins/jenkins:lts'
+    image: 'lmenezes/cerebro'
+    #user: root # 以root方式运行，不以root运行安装其他服务会没权限还有其他方式可以用
+    ports:
+        - '9000:9000'
+    #privileged: true #给 这个进程赋予特权权限
+    restart: always 
+    network_mode: bridge

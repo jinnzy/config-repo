@@ -1,0 +1,16 @@
+- type: log
+  paths:
+    - /var/log/postgresql-Fri*.log
+  close_inactive: 30m
+  close_removed: true
+  clean_removed: true
+  multiline.pattern: '^[1-9][0-9][0-9]?.[0-9]|; ; '
+  multiline.negate: true
+  multiline.match: after
+  fields:
+    dbtype: postgresql
+  fields_under_root: true # field字段加在顶级目录
+#  processors:
+#    - drop_fields:
+#        fields: ["prospector", "offset","beat"]
+

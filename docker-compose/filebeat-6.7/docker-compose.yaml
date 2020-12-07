@@ -1,0 +1,32 @@
+version: '3'
+services:
+  filebeat:
+    restart: always
+    image: docker.elastic.co/beats/filebeat:6.7.1
+    #hostname: host123
+    container_name: filebeat
+    user: root
+    command: ["-c","/etc/filebeat.yml","-e"]
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - ./config/filebeat.yml:/etc/filebeat.yml
+      - /var/run/docker.sock:/var/run/docker.sock
+      # mysql-5.6
+      #- ./config/mysqlAudit.yml:/usr/share/filebeat/inputs.d/mysqlAudit.yml
+      #- ./config/20190323_mysql-audit.json:/var/log/20190323_mysql-audit.json
+      # mysql-5.7
+      #- ./config/2019-04-15_101443mysql-new.txt:/var/log/2019-04-15_101443mysql-new.txt
+      #- ./config/mysqlAudit57.yml:/usr/share/filebeat/inputs.d/mysqlAudit57.yml
+      # postgresql
+      #- ./config/postgresql-Fri.log:/var/log/postgresql-Fri.log
+      #- ./config/postgresql.yml:/usr/share/filebeat/inputs.d/postgresql.yml
+      # mongodb
+      - ./config/audit.bson:/var/log/audit.bson
+      - ./config/mongo.yml:/usr/share/filebeat/inputs.d/mongo.yml
+      # temp
+      - /etc/hosts:/etc/hosts
+     
+    #ports:
+    #  - 9200:9200
+    #  - 9300:9300
+    network_mode: host

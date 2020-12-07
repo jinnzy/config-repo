@@ -1,0 +1,4 @@
+node.name: es1
+cluster.name: "test-cluster"
+network.host: 0.0.0.0
+

@@ -1,0 +1,23 @@
+version: '3.2'
+services:
+  client:
+    restart: always
+    image: consul:1.5.2
+    #hostname: host123
+    #container_name: filebeat
+    #user: root
+    #command: ["-c","/etc/filebeat.yml","-e"]
+    command: 'agent -dev -client 0.0.0.0'
+    #environment:
+    #  CONSUL_LOCAL_CONFIG: '{"skip_leave_on_interrupt": true}'
+    volumes:
+      - /etc/localtime:/etc/localtime
+    #  - ./config/config.json:/consul/config/config.json
+      - ./data:/consul/data
+    ports:
+      -  '8500:8500'
+#networks:
+#  default:
+#    external: 
+#      name: host
+#

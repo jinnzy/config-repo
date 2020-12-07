@@ -1,0 +1,18 @@
+version: '3.3'
+      
+services:
+  mysql:
+    image: 'mysql/mysql-server:5.7'
+    #user: root # 以root方式运行，不以root运行安装其他服务会没权限还有其他方式可以用
+    ports:
+        - '3306:3306'
+    #privileged: true #给 这个进程赋予特权权限
+    restart: always 
+    network_mode: bridge
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - ./config/my.cnf:/etc/my.cnf
+      - ./data:/opt/mysql
+

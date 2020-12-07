@@ -1,0 +1,28 @@
+filebeat.config:
+  inputs:
+    path: ${path.config}/inputs.d/*.yml
+    reload.enabled: false
+  modules:
+    path: ${path.config}/modules.d/*.yml
+    reload.enabled: false
+#filebeat.autodiscover:
+#  providers:
+#    - type: docker
+#      hints.enabled: true
+#processors:
+processors:
+  - drop_fields:
+      fields: ["prospector", "offset","beat","source"]
+#output.elasticsearch:
+#  hosts: '10.0.0.122:9200'
+
+#output.console:
+#  pretty: true
+output.kafka:
+  hosts: ["10.98.168.34:9093"]
+  topic: 'dbAudit-test'
+  partition.round_robin:
+    reachable_only: false
+  required_acks: 1
+  compression: gzip
+  max_message_bytes: 1000000

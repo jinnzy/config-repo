@@ -1,0 +1,16 @@
+version: '3'
+services:
+  minio:
+    restart: always
+    image: minio/minio
+    command: ["server","/data"]
+    #user: root
+    volumes:
+      - ./config:/root/.minio
+      - ./data:/data
+    environment:
+      MINIO_ACCESS_KEY: access
+      MINIO_SECRET_KEY: 12345678
+    ports:
+      - 9111:9000
+    network_mode: bridge

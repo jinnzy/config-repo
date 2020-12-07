@@ -1,0 +1,14 @@
+version: "3"
+services:
+  envoy:
+    image: envoyproxy/envoy:v1.12.2
+    volumes:
+    - ./config:/etc/envoy
+    restart: always
+    container_name: envoy
+    #ports:
+    #- "8001:8001"
+    #- "8002:9292"
+    #- "8003:9901"
+    restart: always
+    network_mode: host
