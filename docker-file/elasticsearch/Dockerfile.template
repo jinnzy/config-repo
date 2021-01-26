@@ -1,0 +1,24 @@
+FROM alpine:3.9 as builder
+WORKDIR /opt
+RUN echo "http://mirrors.aliyun.com/alpine/v3.9/main/" > /etc/apk/repositories && \
+    echo "http://mirrors.aliyun.com/alpine/v3.9/community/" >> /etc/apk/repositories && \
+    apk update && \
+    apk upgrade && \
+    apk add wget && \
+    wget -O ik.zip  https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v{{ES_VERSION}}/elasticsearch-analysis-ik-{{ES_VERSION}}.zip && \
+    wget -O pinyin.zip https://github.com/medcl/elasticsearch-analysis-pinyin/releases/download/v{{ES_VERSION}}/elasticsearch-analysis-pinyin-{{ES_VERSION}}.zip && \
+    wget -O repository-s3.zip https://artifacts.elastic.co/downloads/elasticsearch-plugins/repository-s3/repository-s3-{{ES_VERSION}}.zip
+#FROM elasticsearch:{{ES_VERSION}}
+FROM docker.elastic.co/elasticsearch/elasticsearch:{{ES_VERSION}}
+COPY --from=builder  /opt/ik.zip /tmp/
+COPY --from=builder  /opt/pinyin.zip /tmp/
+COPY --from=builder /opt/repository-s3.zip /tmp/
+COPY ./bin/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN bin/elasticsearch-plugin install -b file:///tmp/ik.zip &&\
+    bin/elasticsearch-plugin install -b file:///tmp/pinyin.zip &&\
+    bin/elasticsearch-plugin install -b file:///tmp/repository-s3.zip &&\
+    rm -f /tmp/ik.zip &&\
+    rm -f /tmp/pinyin.zip && \
+    rm -f /tmp/repository-s3.zip && \
+    chown 1000.1000 /usr/local/bin/docker-entrypoint.sh && \
+    chmod 755 /usr/local/bin/docker-entrypoint.sh
